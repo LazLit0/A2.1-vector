@@ -1,0 +1,3 @@
+/Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/build/CMakeFiles/test_it.dir
+/Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/build/CMakeFiles/edit_cache.dir
+/Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/build/CMakeFiles/rebuild_cache.dir

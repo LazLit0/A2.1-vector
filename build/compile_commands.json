@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/build",
+  "command": "/usr/bin/clang++   -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15 -std=gnu++14 -o CMakeFiles/test_it.dir/main.cpp.o -c /Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/main.cpp",
+  "file": "/Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/main.cpp"
+},
+{
+  "directory": "/Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/build",
+  "command": "/usr/bin/clang++   -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15 -std=gnu++14 -o CMakeFiles/test_it.dir/payload.cpp.o -c /Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/payload.cpp",
+  "file": "/Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/payload.cpp"
+},
+{
+  "directory": "/Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/build",
+  "command": "/usr/bin/clang++   -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15 -std=gnu++14 -o CMakeFiles/test_it.dir/test21.cpp.o -c /Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/test21.cpp",
+  "file": "/Users/Lazlo/Dropbox/Nextcloud/Studium/C-C++/A2.1-vector/test21.cpp"
+}
+]
