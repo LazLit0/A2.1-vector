@@ -12,15 +12,13 @@ void test_21()
     using my::vector;
     using std::cout;
     using std::endl;
-#ifndef NDEBUG
 
     {
         cout << "construction/destruction, size() ... ";
         vector<Payload> v0;
         assert(v0.size() == 0);
         assert(Payload::count() == 0);
-    }
-#if 0
+        
        {
             // are the elements created?
             vector<Payload> v1(3, Payload(-1,-1,-1));
@@ -47,6 +45,7 @@ void test_21()
             assert(v.size() == 3);
             assert(!v.empty());
             assert(Payload::count() == 3);
+
 
             assert(v.pop_back() == Payload(2,2,2));
             assert(v.size() == 2);
@@ -130,12 +129,12 @@ void test_21()
         cout << " done." << endl;
     }
 
+#if 0
     {
         // mal ausprobieren - soll vorerst nicht (!) kompilieren
         vector<Payload> v1;
         vector<Payload> v2 = v2;
     }
-#endif
 #endif
 
 } // test21()

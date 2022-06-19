@@ -5,56 +5,104 @@ namespace my
     class vector
     {
     private:
-        int capacity;
-        size_t current;
         T* werte_; 
+        size_t size_;
 
     public:
-        vector();
-        vector(int size, T wert);
-        vector(int size);
-        ~vector();
-        // bool empty();
-        size_t size();
-        // clear();
-        // push_back(const T &);
-        // pop_back();
-        // T &operator[](size_t i);
-        // T operator[](size_t i) const;
-        // at(size_t i);
+        //constructor, deconstructor
+        vector<T>(int size = 0, T wert = T()); //derefferenzieren ist wichtig, sonst malloc error von test_it, da new nur referenz gibt
+        vector<T>(int size);
+        ~vector<T>(){delete[] werte_;}
+
+        //methods
+        bool empty() const;
+        size_t size() const;
+        void clear();
+        void push_back(const T &wert);
+        T pop_back();
+        T &operator[](size_t i);
+        T operator[](size_t i) const;
+        T &at(size_t i);
+        T at(size_t) const;
         vector(vector<T> const &) = delete;
         vector<T> &operator=(vector<T> const &) = delete;
     };
 
+    // Implementation: constructors
     template <typename T>
-    vector<T>::vector() : werte_(new T[0]){
-        capacity = 0;
-        current = 0;
-    };
-
-    template <typename T>
-    vector<T>::vector(int n, T wert) : werte_(new T[n]){
-        capacity = n;
-        current = 0;
-        werte_[0] = wert;
-                               };
-
-    template <typename T>
-    vector<T>::vector(int n) : werte_(new T[n]){
-        capacity = n;
-        current = 0;
-    };
-
-    template <typename T>
-    vector<T>::~vector()
+    my::vector<T>::vector(int n, T wert) : werte_(new T[n]), size_(n)
     {
-        delete werte_;
+        werte_[0] = wert; 
     };
 
     template <typename T>
-    size_t vector<T>::size()
+    my::vector<T>::vector(int n) : werte_(new T[n]), size_(n){};
+
+    // Implementation: methods
+    template <typename T>
+    size_t my::vector<T>::size() const
     {
-        return capacity;
+        return size_;
     };
 
+    template <typename T>
+    bool my::vector<T>::empty() const
+    {
+        return size_ == 0;
+    };
+
+    template <typename T>
+    void my::vector<T>::clear()
+    {
+        delete[] werte_;
+    };
+
+    template <typename T>
+    void my::vector<T>::push_back(const T &wert)
+    {
+        size_ += 1;
+        auto temp = werte_;
+        werte_ = new T[size_];
+        for(int i = 0; i < size_-1; i++) {
+            werte_[i] = temp[i];
+        }
+        delete[] temp;
+        werte_[size_-1] = wert;
+    };
+
+    template <typename T>
+    T my::vector<T>::pop_back()
+    {
+        auto temp = werte_;
+        size_ -= 1;
+        werte_ = new T[size_];
+        for(int i = 0; i < size_; i++) {
+            werte_[i] = temp[i];
+        }
+        auto tempElement = temp[size_];
+        delete[] temp;
+        return tempElement;
+    };
+
+    template <typename T>
+    T& my::vector<T>::operator[](size_t i) {
+        return werte_[i];
+    }
+
+    template <typename T>
+    T my::vector<T>::operator[](size_t i) const{
+        return werte_[i];
+    }
+
+    template <typename T>
+    T& my::vector<T>::at(size_t i) {
+        if(size_ <= i) throw std::out_of_range("Index out of range!");
+        return werte_[i];
+    }
+
+    template <typename T>
+    T my::vector<T>::at(size_t i) const {
+        if(size_ <= i) throw std::out_of_range("Index out of range!");
+        return werte_[i];
+    }
 }
