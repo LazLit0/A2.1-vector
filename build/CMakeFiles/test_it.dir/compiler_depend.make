@@ -584,7 +584,8 @@ CMakeFiles/test_it.dir/test21.cpp.o: ../test21.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/bitset \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__bit_reference \
   ../my_vector.h \
-  ../payload.h
+  ../payload.h \
+  ../trackmymoves.h
 
 
 ../payload.h:
@@ -828,6 +829,8 @@ CMakeFiles/test_it.dir/test21.cpp.o: ../test21.cpp \
 /Library/Developer/CommandLineTools/usr/include/c++/v1/cstdlib:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/locale.h:
+
+../trackmymoves.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk/usr/include/pthread/sched.h:
 
