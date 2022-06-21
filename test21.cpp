@@ -17,23 +17,24 @@ void test_21()
     {
         cout << "construction/destruction, size() ... ";
         vector<Payload> v0;
-        v0.reserve(500);
-        assert(v0.capacity() == 500);
+        v0.reserve(3);
+        assert(v0.capacity() == 3);
         assert(v0.size() == 0);
         assert(Payload::count() == 0);
         
        {
             // are the elements created?
             vector<Payload> v1(3, Payload(-1,-1,-1));
-            assert(v1.capacity() == 3); //es wird pro reserve immer die doppelte Länge der speicherlänge aller gespeiocherten Objekte genommen
-            cout << v1.size() << endl;
+            assert(v1.capacity() == 3);
+                    cout << v1.size() << endl;
             assert(v1.size() == 1);
-            assert(Payload::count() == v1.size());
+            assert(Payload::count() == v1.capacity());
         }
-
         // are the elements destroyed?
+        cout << Payload::count() << endl;
         assert(Payload::count() == 0);
         cout << " done." << endl;
+
     }
 
  
@@ -47,10 +48,11 @@ void test_21()
             v.push_back(Payload(0,0,0));
             v.push_back(Payload(1,1,1));
             v.push_back(Payload(2,2,2));
+            cout << "das ist count:" << Payload::count() << endl;
+            assert(Payload::count() == 3);
             assert(v.size() == 3);
             assert(v.capacity() == 4);
             assert(!v.empty());
-            assert(Payload::count() == 3);
 
 
             assert(v.pop_back() == Payload(2,2,2));

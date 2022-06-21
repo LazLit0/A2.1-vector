@@ -1,170 +1,209 @@
 #pragma once
 namespace my
 {
-    template <typename T>
+    template <typename ValueT>
     class vector
     {
     private:
-        T* werte_; 
+        ValueT *werte_;
         size_t size_;
         size_t capacity_;
+        void fill(const ValueT &wert);
 
     public:
-        //Ctor, Dtor
-        vector<T>(int N = 0, T wert = T());
-        vector<T>(const vector<T>& rhs);
-        vector<T>(vector<T>&& rhs);
-        vector<T>& operator=(vector<T> rhs);
-        ~vector<T>();
+        // Ctor, Dtor
+        vector<ValueT>();
+        vector<ValueT>(const size_t& n, const ValueT& wert);
+        vector<ValueT>(const vector<ValueT> &rhs);
+        vector<ValueT>(vector<ValueT> &&rhs);
+        vector<ValueT> &operator=(vector<ValueT> rhs);
+        ~vector<ValueT>();
 
-        //methods
+        // methods
         bool empty() const;
         size_t size() const;
         size_t capacity() const;
         void clear();
         void reserve(size_t new_capacity);
         void shrink_to_fit();
-        void push_back(const T& wert);
-        T pop_back();
-        T &operator[](size_t i);
-        T operator[](size_t i) const;
-        T &at(size_t i);
-        T at(size_t) const;
+        void push_back(const ValueT &wert);
+        ValueT pop_back();
+        ValueT &operator[](size_t i);
+        ValueT operator[](size_t i) const;
+        ValueT &at(size_t i);
+        ValueT at(size_t) const;
     };
+}
 
     // Implementation: constructors
-    template <typename T>
-    my::vector<T>::vector(int N, T wert)
-    : werte_(nullptr), size_(0), capacity_(0){
-    if(N != 0) reserve(N);
-    if(wert != T()){
-        push_back(wert);
+    template <typename ValueT>
+    my::vector<ValueT>::vector()
+        : werte_(nullptr), size_(0), capacity_(0)
+    {
     }
-};
+
+    template <typename ValueT>
+    my::vector<ValueT>::vector(const size_t& n, const ValueT& wert) : werte_(nullptr), size_(0), capacity_(0)
+    {
+        push_back(wert);
+        for(size_t i= 1; i < n; i++){
+            new (werte_ + i) ValueT(wert);
+            capacity_++;
+        }
+    }
 
     // Copy Ctor
-    template <typename T>
-    my::vector<T>::vector(const vector<T>& rhs) : werte_(nullptr), size_(0), capacity_(0){
-        if(rhs.capacity() != 0) reserve(rhs.capacity());
-        for(int i = 0; i < rhs.size(); i++) {
+    template <typename ValueT>
+    my::vector<ValueT>::vector(const vector<ValueT> &rhs) : werte_(nullptr), size_(0), capacity_(0)
+    {
+        if (rhs.capacity() != 0)
+            reserve(rhs.capacity());
+        for (size_t i = 0; i < rhs.size(); i++)
+        {
             push_back(rhs[i]);
         }
     };
 
     // Move Ctor
-    template <typename T>
-    my::vector<T>::vector(vector<T>&& rhs) : vector<T>(){
+    template <typename ValueT>
+    my::vector<ValueT>::vector(vector<ValueT> &&rhs) : vector<ValueT>()
+    {
         std::swap(*this, rhs);
     }
 
     // copy-assign
-    template <typename T>
-    my::vector<T>& my::vector<T>::operator=(vector<T> rhs) {
+    template <typename ValueT>
+    my::vector<ValueT> &my::vector<ValueT>::operator=(vector<ValueT> rhs)
+    {
         std::swap(*this, rhs);
         return *this;
     }
 
     // Dtor
-    template <typename T>
-    my::vector<T>::~vector<T>() {
-        if(capacity() <= 0) {
-            return;
-        }
-        for (size_t i = 0; i < size(); i++)
+    template <typename ValueT>
+    my::vector<ValueT>::~vector()
+    {
+        if(capacity()<= 0)
         {
-            (werte_+i) -> ~T();
-        }
-        free(werte_);
-        
-    }
-
-    // Implementation: methods
-    template <typename T>
-    size_t my::vector<T>::size() const
-    {
-        return size_;
-    };
-
-    template <typename T>
-    size_t my::vector<T>::capacity() const
-    {
-        return capacity_;
-    };
-
-    template <typename T>
-    bool my::vector<T>::empty() const
-    {
-        return size_ == 0;
-    };
-
-    template <typename T>
-    void my::vector<T>::clear()
-    {
-        for(int i=0; i < size(); i++){
-            pop_back();
-        }
-        size_ = 0;
-    };
-    
-    template <typename T>
-    void my::vector<T>::reserve(size_t new_capacity)
-    {
-        if(new_capacity == 0) new_capacity = 1; // wenn nichts übergeben, dann trotzdem eins reserviert, sonst crashed pushback, falls als nächstes aufgerufen
-        if(new_capacity < size()) return; // falls zu kleine capacity übergeben wird
-        void* memoryBlock = malloc(new_capacity * sizeof(T)); //malloc für memory Reservierung
-        T* temp = static_cast<T*>(memoryBlock); //cast Type von void* zu T*
-        for(int i = 0; i < size(); i++) {
-            new (temp+i) T (std::move(werte_[i]));
+        return;
         }
 
-        //das memory dem Pointer zuweisen
-        for(int i = 0; i < size(); i++) (werte_+i) -> ~T();
-        werte_=std::move(temp);
-        capacity_ = new_capacity;
+        for (size_t i = 0; i < capacity(); i++)
+        {
+            (werte_ + i) -> ~ValueT();
+        }
+
+    free(werte_);
     }
 
-    template <typename T>
-    void my::vector<T>::shrink_to_fit(){
-        reserve(size());
-    }
+// Implementation: methods
+template <typename ValueT>
+size_t my::vector<ValueT>::size() const
+{
+    return size_;
+};
 
-    template <typename T>
-    void my::vector<T>::push_back(const T& wert)
+template <typename ValueT>
+size_t my::vector<ValueT>::capacity() const
+{
+    return capacity_;
+};
+
+template <typename ValueT>
+bool my::vector<ValueT>::empty() const
+{
+    return size_ == 0;
+};
+
+template <typename ValueT>
+void my::vector<ValueT>::clear()
+{
+    for (int i = 0; i < size(); i++)
     {
-        if(size() >= capacity()) reserve(capacity() * 2); //weiteren Speicher allozieren
-        new(werte_+size()) T (wert);                       //neues Object hinten anfügen
-        size_++;
+        pop_back();
+    }
+    size_ = 0;
+};
+
+template <typename ValueT>
+void my::vector<ValueT>::reserve(size_t new_capacity)
+{
+    std::cout << "neuie cap ::" << new_capacity << std::endl;
+    int new_capacity_int = new_capacity;
+    if(new_capacity_int == 0){
+        new_capacity = 1;  // in case capacity is not specified and reserved is being called by push_back
+    };
+    if(new_capacity < size()) return;  // new_capacity must be bigger
+
+    void* memory = malloc(new_capacity * sizeof(ValueT));     // reserving memory
+    ValueT* temp = static_cast<ValueT*>(memory);
+
+    for(int i = 0; i < size(); i++){
+        new (temp+i) ValueT (std::move(werte_[i]));
     };
 
-    template <typename T>
-    T my::vector<T>::pop_back()
-    {
-        if(empty()) throw std::out_of_range("Vector empty");
-        T back = werte_[size_ - 1];
-        (werte_ + size_ - 1) -> ~T();
-        size_--;
-        return back;
+    // assigning new allocated memory to intern pointer
+    for(int i = 0; i< size(); i++){
+        (werte_+i) -> ~ValueT();
     };
 
-    template <typename T>
-    T& my::vector<T>::operator[](size_t i) {
-        return werte_[i];
-    }
+    werte_=std::move(temp);
 
-    template <typename T>
-    T my::vector<T>::operator[](size_t i) const{
-        return werte_[i];
-    }
+    capacity_ = new_capacity;
 
-    template <typename T>
-    T& my::vector<T>::at(size_t i) {
-        if(size_ <= i) throw std::out_of_range("Index out of range!");
-        return werte_[i];
-    }
 
-    template <typename T>
-    T my::vector<T>::at(size_t i) const {
-        if(size_ <= i) throw std::out_of_range("Index out of range!");
-        return werte_[i];
-    }
+}
+
+template <typename ValueT>
+void my::vector<ValueT>::shrink_to_fit()
+{
+    reserve(size());
+}
+
+template <typename ValueT>
+void my::vector<ValueT>::push_back(const ValueT &wert)
+{
+    if (size() >= capacity())
+        reserve(capacity() + capacity());        // weiteren Speicher allozieren
+    new (werte_ + size()) ValueT(wert); // neues Object hinten anfügen
+    size_++;
+};
+
+template <typename ValueT>
+ValueT my::vector<ValueT>::pop_back()
+{
+    if (empty())
+        throw std::out_of_range("Vector empty");
+    ValueT back = werte_[size_ - 1];
+    (werte_ + size_ - 1)->~ValueT();
+    size_--;
+    return back;
+};
+
+template <typename ValueT>
+ValueT &my::vector<ValueT>::operator[](size_t i)
+{
+    return werte_[i];
+}
+
+template <typename ValueT>
+ValueT my::vector<ValueT>::operator[](size_t i) const
+{
+    return werte_[i];
+}
+
+template <typename ValueT>
+ValueT &my::vector<ValueT>::at(size_t i)
+{
+    if (size_ <= i)
+        throw std::out_of_range("Index out of range!");
+    return werte_[i];
+}
+
+template <typename ValueT>
+ValueT my::vector<ValueT>::at(size_t i) const
+{
+    if (size_ <= i)
+        throw std::out_of_range("Index out of range!");
+    return werte_[i];
 }
