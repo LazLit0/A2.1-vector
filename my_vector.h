@@ -1,16 +1,20 @@
 #pragma once
+#include <array>
+
 namespace my
 {
     template <typename ValueT>
     class vector
     {
     private:
-        ValueT *werte_;
+        ValueT* werte_;
         size_t size_;
         size_t capacity_;
-        void fill(const ValueT &wert);
 
     public:
+
+    using value_type = ValueT;
+
         // Ctor, Dtor
         vector<ValueT>();
         vector<ValueT>(const size_t& n, const ValueT& wert);
@@ -26,7 +30,7 @@ namespace my
         void clear();
         void reserve(size_t new_capacity);
         void shrink_to_fit();
-        void push_back(const ValueT &wert);
+        void push_back(const ValueT& wert);
         ValueT pop_back();
         ValueT &operator[](size_t i);
         ValueT operator[](size_t i) const;
@@ -37,18 +41,16 @@ namespace my
 
     // Implementation: constructors
     template <typename ValueT>
-    my::vector<ValueT>::vector()
-        : werte_(nullptr), size_(0), capacity_(0)
+    my::vector<ValueT>::vector() : werte_(nullptr), size_(0), capacity_(0)
     {
     }
 
     template <typename ValueT>
     my::vector<ValueT>::vector(const size_t& n, const ValueT& wert) : werte_(nullptr), size_(0), capacity_(0)
     {
-        push_back(wert);
-        for(size_t i= 1; i < n; i++){
-            new (werte_ + i) ValueT(wert);
-            capacity_++;
+        reserve(n);
+        for(size_t i= 0; i < n; i++){
+            push_back(wert);
         }
     }
 
@@ -88,7 +90,7 @@ namespace my
         return;
         }
 
-        for (size_t i = 0; i < capacity(); i++)
+        for (size_t i = 0; i < size(); i++)
         {
             (werte_ + i) -> ~ValueT();
         }
@@ -118,28 +120,33 @@ bool my::vector<ValueT>::empty() const
 template <typename ValueT>
 void my::vector<ValueT>::clear()
 {
-    for (int i = 0; i < size(); i++)
+    while(size() > 0)
     {
         pop_back();
     }
-    size_ = 0;
 };
 
 template <typename ValueT>
 void my::vector<ValueT>::reserve(size_t new_capacity)
 {
-    std::cout << "neuie cap ::" << new_capacity << std::endl;
-    int new_capacity_int = new_capacity;
-    if(new_capacity_int == 0){
-        new_capacity = 1;  // in case capacity is not specified and reserved is being called by push_back
-    };
+    // std::cout << "neuie cap ::" << new_capacity << std::endl;
+    if((int)new_capacity < 0)
+        {
+            // throw error if new_capacity is negative
+            throw std::out_of_range("Capacity can't be negative.");
+        }
+  
     if(new_capacity < size()) return;  // new_capacity must be bigger
 
     void* memory = malloc(new_capacity * sizeof(ValueT));     // reserving memory
     ValueT* temp = static_cast<ValueT*>(memory);
 
     for(int i = 0; i < size(); i++){
-        new (temp+i) ValueT (std::move(werte_[i]));
+        if(werte_){
+            new (temp+i) ValueT (std::move(werte_[i]));
+        } else {
+            new (temp+i) ValueT (ValueT());
+        }
     };
 
     // assigning new allocated memory to intern pointer
@@ -148,7 +155,6 @@ void my::vector<ValueT>::reserve(size_t new_capacity)
     };
 
     werte_=std::move(temp);
-
     capacity_ = new_capacity;
 
 
@@ -163,8 +169,10 @@ void my::vector<ValueT>::shrink_to_fit()
 template <typename ValueT>
 void my::vector<ValueT>::push_back(const ValueT &wert)
 {
-    if (size() >= capacity())
-        reserve(capacity() + capacity());        // weiteren Speicher allozieren
+    if (size() >= capacity()){
+        std::cout << "DSA ist vergleich" << std::endl;
+        reserve(capacity() + capacity() + 1);        // weiteren Speicher allozieren
+    };
     new (werte_ + size()) ValueT(wert); // neues Object hinten anfügen
     size_++;
 };
@@ -175,7 +183,7 @@ ValueT my::vector<ValueT>::pop_back()
     if (empty())
         throw std::out_of_range("Vector empty");
     ValueT back = werte_[size_ - 1];
-    (werte_ + size_ - 1)->~ValueT();
+    (werte_ + size_ - 1) -> ~ValueT();
     size_--;
     return back;
 };

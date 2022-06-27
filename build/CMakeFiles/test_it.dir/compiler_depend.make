@@ -584,9 +584,12 @@ CMakeFiles/test_it.dir/test21.cpp.o: ../test21.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/bitset \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__bit_reference \
   ../my_vector.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/array \
   ../payload.h \
   ../trackmymoves.h
 
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/array:
 
 ../payload.h:
 

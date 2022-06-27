@@ -17,24 +17,21 @@ void test_21()
     {
         cout << "construction/destruction, size() ... ";
         vector<Payload> v0;
-        v0.reserve(3);
-        assert(v0.capacity() == 3);
+        v0.reserve(200);
+        assert(v0.capacity() == 200);
         assert(v0.size() == 0);
         assert(Payload::count() == 0);
-        
+
        {
             // are the elements created?
             vector<Payload> v1(3, Payload(-1,-1,-1));
-            assert(v1.capacity() == 3);
-                    cout << v1.size() << endl;
-            assert(v1.size() == 1);
-            assert(Payload::count() == v1.capacity());
+            assert(v1.size() == 3);
+            assert(Payload::count() == v1.size());
         }
+
         // are the elements destroyed?
-        cout << Payload::count() << endl;
         assert(Payload::count() == 0);
         cout << " done." << endl;
-
     }
 
  
@@ -48,11 +45,10 @@ void test_21()
             v.push_back(Payload(0,0,0));
             v.push_back(Payload(1,1,1));
             v.push_back(Payload(2,2,2));
-            cout << "das ist count:" << Payload::count() << endl;
-            assert(Payload::count() == 3);
             assert(v.size() == 3);
-            assert(v.capacity() == 4);
             assert(!v.empty());
+            std::cout << "PAyload: " << Payload::count() << std::endl;
+            assert(Payload::count() == 3);
 
 
             assert(v.pop_back() == Payload(2,2,2));
@@ -67,10 +63,12 @@ void test_21()
             assert(v.size() == 0);
             assert(v.empty());
             assert(Payload::count() == 0);
+
         }
         assert(Payload::count() == 0);
         cout << " done." << endl;
     }
+
 
     {
         cout << "operator[] ... ";
@@ -173,7 +171,7 @@ void test_22()
             assert(v.empty());
             assert(v.capacity() == 3);
             assert(v.size() == 0);
-            // assert(Payload::count() == 0);
+            assert(Payload::count() == 0);
 
             v.push_back(Payload(1,2,3));
             v.push_back(Payload(7,8,9));
@@ -181,7 +179,7 @@ void test_22()
             assert(v.capacity() == 3);
 
             v.push_back(Payload(7,8,9));
-            assert(v.capacity() == 6);
+            assert(v.capacity() == 7);
             v.shrink_to_fit();
             assert(v.size() == 4);
             assert(v.capacity() == 4);
@@ -235,6 +233,51 @@ void test_22()
             assert(vCopy.capacity() != v.capacity());
 
 
+        }
+        cout << " done." << endl;
+    }
+
+     {
+        cout << "clear()  ... ";
+        vector<Payload> v;
+        v.push_back(Payload(0,0,0));
+        v.push_back(Payload(1,1,1));
+        v.push_back(Payload(2,2,2));
+        v.clear();
+        assert(v.size() == 0);
+        assert(Payload::count() == 0);
+        cout << "capacity: " << v.capacity() << endl;
+        assert(v.capacity() == 3);
+        cout << " done." << endl;
+    }
+
+    {
+        cout << "reserve(), shrink_to_fit()  ... ";
+        {
+            vector<Payload> v;
+            v.push_back(Payload(0,0,0));
+            v.reserve(100);
+            assert(v.at(0) == Payload(0,0,0));
+            assert(v.capacity() == 100);
+            // cout << "HIER BI NICH" << endl;
+            assert(Payload::count() == 1);
+
+            try {
+                v.reserve(-100);
+                assert(!"should have thrown exception");
+            } catch(std::out_of_range ex) {
+                cout << "exception: " << ex.what();
+            }
+        }
+        {
+            vector<Payload> v;
+            v.reserve(100);
+            v.push_back(Payload(0,0,0));
+            v.push_back(Payload(1,1,1));
+            v.push_back(Payload(2,2,2));
+            assert(v.capacity() == 100);
+            v.shrink_to_fit();
+            assert(v.capacity() == 3);
         }
         cout << " done." << endl;
     }
